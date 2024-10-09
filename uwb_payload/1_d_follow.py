@@ -20,23 +20,23 @@ except KeyboardInterrupt:
 rvr.drive_control.reset_heading()
 
 print(ports)
-serialInst = serial.Serial()
+serialInst = serial.Serial('/dev/ttyACM0')
 
-portList = []
-for port in ports:
-    portList.append(str(port))
-    print(str(port))
+# portList = []
+# for port in ports:
+#     portList.append(str(port))
+#     print(str(port))
 
-val = input("Select a port COM:")
+# val = input("Select a port COM:")
 
-for x in range(0, len(portList)):
-    if portList[x].startswith("COM" + str(val)):
-        portVar = "COM"+str(val)
-        print(portList[x])
+# for x in range(0, len(portList)):
+#     if portList[x].startswith("COM" + str(val)):
+#         portVar = "COM"+str(val)
+#         print(portList[x])
 
-serialInst.baudrate = 9600
-serialInst.port = portVar
-serialInst.open()
+# serialInst.baudrate = 9600
+# serialInst.port = input("Select a port COM:")
+# serialInst.open()
 
 dist_threshold = 1000
 delimeter = ','
