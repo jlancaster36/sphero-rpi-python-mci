@@ -29,7 +29,8 @@ async def main():
     delimeter = ','
 
     while True:
-        if serialInst.in_waiting:
+            while serialInst.in_waiting > 50:
+                 _ = serialInst.read_all()
             packet = serialInst.readline()
             decoded_packet = packet.decode('utf')
             data = decoded_packet.split(delimeter)
