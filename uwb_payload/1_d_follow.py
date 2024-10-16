@@ -7,10 +7,11 @@ from sphero_sdk import SpheroRvrObserver
 
 import asyncio
 
-from sphero_sdk import SpheroRvrAsync
+from sphero_sdk import SpheroRvrAsync, SerialAsyncDal
 ports = serial.tools.list_ports.comports()
 
-rvr = SpheroRvrAsync()
+loop = asyncio.get_event_loop()
+rvr = SpheroRvrAsync(dal=SerialAsyncDal(loop))
 
 try:
     rvr.wake()
@@ -52,4 +53,4 @@ async def main():
                 except:
                     print("Unkown exception occurred while driving forward")
 
-main()
+asyncio.gather(main())
