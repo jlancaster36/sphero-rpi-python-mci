@@ -5,9 +5,12 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 from sphero_sdk import SpheroRvrObserver
 
+import asyncio
+
+from sphero_sdk import SpheroRvrAsync
 ports = serial.tools.list_ports.comports()
 
-rvr = SpheroRvrObserver()
+rvr = SpheroRvrAsync()
 
 try:
     rvr.wake()
@@ -19,43 +22,33 @@ except KeyboardInterrupt:
 
 rvr.drive_control.reset_heading()
 
-print(ports)
-serialInst = serial.Serial('/dev/ttyACM0')
+serialInst = serial.Serial('/dev/ttyACM0', 19200, timeout = 5)
 
-# portList = []
-# for port in ports:
-#     portList.append(str(port))
-#     print(str(port))
+async def main():
+    dist_threshold = 1000
+    delimeter = ','
 
-# val = input("Select a port COM:")
+    while True:
+        if serialInst.in_waiting:
+            packet = serialInst.readline()
+            decoded_packet = packet.decode('utf')
+            data = decoded_packet.split(delimeter)
+            dist = (int) (data[4])
+            print(dist)
+            if dist > dist_threshold:
+                print("Move Rover Forward")
+                try:
+                    await rvr.drive_with_heading(
+                        speed=25,
+                        heading=0
+                    )
+                    # move forward
+                    # rvr.drive_control.drive_forward_seconds(
+                    #     speed=25,
+                    #     heading=0,  # Valid heading values are 0-359
+                    #     time_to_drive=1
+                    # )
+                except:
+                    print("Unkown exception occurred while driving forward")
 
-# for x in range(0, len(portList)):
-#     if portList[x].startswith("COM" + str(val)):
-#         portVar = "COM"+str(val)
-#         print(portList[x])
-
-# serialInst.baudrate = 9600
-# serialInst.port = input("Select a port COM:")
-# serialInst.open()
-
-dist_threshold = 1000
-delimeter = ','
-
-while True:
-    if serialInst.in_waiting:
-        packet = serialInst.readline()
-        decoded_packet = packet.decode('utf')
-        data = decoded_packet.split(delimeter)
-        dist = (int) (data[4])
-        print(dist)
-        if dist > dist_threshold:
-            print("Move Rover Forward")
-            try:
-                # move forward
-                rvr.drive_control.drive_forward_seconds(
-                    speed=25,
-                    heading=0,  # Valid heading values are 0-359
-                    time_to_drive=1
-                )
-            except:
-                print("Unkown exception occurred while driving forward")
+main()
