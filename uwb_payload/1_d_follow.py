@@ -13,19 +13,18 @@ ports = serial.tools.list_ports.comports()
 loop = asyncio.get_event_loop()
 rvr = SpheroRvrAsync(dal=SerialAsyncDal(loop))
 
-try:
-    rvr.wake()
-
-    # Give RVR time to wake up
-    time.sleep(2)
-except KeyboardInterrupt:
-        print('\nProgram terminated with keyboard interrupt.')
-
-rvr.drive_control.reset_heading()
-
 serialInst = serial.Serial('/dev/ttyACM0', 19200, timeout = 5)
 
 async def main():
+    try:
+        await rvr.wake()
+
+        # Give RVR time to wake up
+        time.sleep(2)
+    except KeyboardInterrupt:
+            print('\nProgram terminated with keyboard interrupt.')
+
+    await rvr.drive_control.reset_heading()
     dist_threshold = 1000
     delimeter = ','
 
