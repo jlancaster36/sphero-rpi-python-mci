@@ -47,20 +47,17 @@ def process_data():
     rvr.drive_control.reset_heading()
     dist_threshold = 1000
     while True:
-        # print(1)
-        pass
-        # print(serial_data)
-        # if serial_data > dist_threshold:
-        #     try:
-        #         print("Move Rover Forward")
-        #         rvr.drive_control.drive_forward_seconds(
-        #             speed=25,
-        #             heading=0,  # Valid heading values are 0-359
-        #             time_to_drive=1
-        #         )
-        #         print("done moving forward")
-        #     except:
-        #         print("Unkown exception occurred while driving forward")
+        print(serial_data)
+        if serial_data > dist_threshold:
+            try:
+                print("Move Rover Forward")
+                rvr.drive_control.drive_forward_seconds(
+                    speed=25,
+                    heading=0,  # Valid heading values are 0-359
+                    time_to_drive=1
+                )
+            except:
+                print("Unkown exception occurred while driving forward")
 
 def main():
     first = multiprocessing.Process(target=read_serial, args=())
