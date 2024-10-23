@@ -21,10 +21,10 @@ def read_serial():
         with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1) as ser:
             while True:
                 line = ser.readline().decode('utf-8').split(delim)
-                print(f"Received: {line}")
+                # print(f"Received: {line}")
                 with data_lock:
-                    serial_data = int(line[2])
-                time.sleep(0.1)  # Adjust as needed for your application
+                    serial_data = (int) (line[2])
+                time.sleep(0.1)
     except serial.SerialException as e:
         print(f"Serial exception: {e}")
 
@@ -42,6 +42,7 @@ def process_data():
     dist_threshold = 1000
     while True:
         with data_lock:
+            print(serial_data)
             if serial_data > dist_threshold:
                 try:
                     print("Move Rover Forward")
