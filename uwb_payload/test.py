@@ -20,6 +20,8 @@ def read_serial():
     try:
         with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1) as ser:
             while True:
+                while ser.in_waiting():
+                    _ = ser.readline()
                 line = ser.readline().decode('utf-8').split(delim)
                 # print(f"Received: {line}")
                 serial_data = (int) (line[2])
