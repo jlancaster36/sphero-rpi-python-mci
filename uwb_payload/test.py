@@ -1,5 +1,6 @@
 import serial
 import threading
+import multiprocessing
 import time
 import asyncio
 import sys
@@ -62,11 +63,17 @@ def process_data():
         #         print("Unkown exception occurred while driving forward")
 
 def main():
-    serial_thread = threading.Thread(target=read_serial)
-    processing_thread = threading.Thread(target=process_data)
+    first = multiprocessing.Process(target=read_serial, args=())
+    second = multiprocessing.Process(target=process_data, args=())
+    first.start()
+    second.start()
+    first.join()
+    second.join()
+    # serial_thread = threading.Thread(target=read_serial)
+    # processing_thread = threading.Thread(target=process_data)
 
-    serial_thread.start()
-    processing_thread.start()
+    # serial_thread.start()
+    # processing_thread.start()
 
     # serial_thread.join()
     # processing_thread.join()
