@@ -25,6 +25,7 @@ def read_serial():
                 #     _ = ser.readline()
                 line = ser.readline().decode('utf-8').split(delim)
                 # print(f"Received: {line}")
+                print(line)
                 serial_data = (int) (line[2])
                 # time.sleep(0.5)
     except serial.SerialException as e:
@@ -44,18 +45,18 @@ def process_data():
     dist_threshold = 1000
     while True:
         with data_lock:
-            print(serial_data)
-            if serial_data > dist_threshold:
-                try:
-                    print("Move Rover Forward")
-                    rvr.drive_control.drive_forward_seconds(
-                        speed=25,
-                        heading=0,  # Valid heading values are 0-359
-                        time_to_drive=1
-                    )
-                    print("done moving forward")
-                except:
-                    print("Unkown exception occurred while driving forward")
+            # print(serial_data)
+            # if serial_data > dist_threshold:
+            #     try:
+            #         print("Move Rover Forward")
+            #         rvr.drive_control.drive_forward_seconds(
+            #             speed=25,
+            #             heading=0,  # Valid heading values are 0-359
+            #             time_to_drive=1
+            #         )
+            #         print("done moving forward")
+            #     except:
+            #         print("Unkown exception occurred while driving forward")
 
 def main():
     serial_thread = threading.Thread(target=read_serial)
