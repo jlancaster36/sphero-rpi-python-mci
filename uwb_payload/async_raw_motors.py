@@ -4,8 +4,8 @@ from sphero_sdk import SpheroRvrAsync
 import asyncio
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '../../../')))
+sys.path.append(os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '../')))
 
 
 loop = asyncio.get_event_loop()
