@@ -21,9 +21,9 @@ def read_serial():
         with serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1) as ser:
             while True:
                 line = ser.readline().decode('utf-8').split(delim)
+                print(f"Received: {line}")
                 with data_lock:
                     serial_data = int(line[2])
-                print(f"Received: {line}")
                 time.sleep(0.1)  # Adjust as needed for your application
     except serial.SerialException as e:
         print(f"Serial exception: {e}")
