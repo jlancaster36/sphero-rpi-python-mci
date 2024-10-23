@@ -24,7 +24,7 @@ def read_serial():
                 # print(f"Received: {line}")
                 with data_lock:
                     serial_data = (int) (line[2])
-                time.sleep(0.1)
+                time.sleep(0.5)
     except serial.SerialException as e:
         print(f"Serial exception: {e}")
 
@@ -51,6 +51,7 @@ def process_data():
                         heading=0,  # Valid heading values are 0-359
                         time_to_drive=1
                     )
+                    print("done moving forward")
                 except:
                     print("Unkown exception occurred while driving forward")
         time.sleep(0.1)
