@@ -1,6 +1,7 @@
 import serial
 import threading
 import multiprocessing
+from multiprocessing import Value
 import time
 import asyncio
 import sys
@@ -15,10 +16,10 @@ SERIAL_PORT = '/dev/ttyACM0'  # Adjust this according to your setup
 BAUD_RATE = 9600
 
 # Global variable to store received serial data
-serial_data = 0
+# serial_data = 0
 
-def read_serial():
-    global serial_data
+def read_serial(serial_data):
+    # global serial_data
     delim = " "
     try:
         with serial.Serial(SERIAL_PORT, BAUD_RATE) as ser:
@@ -29,13 +30,13 @@ def read_serial():
                 line = ser.readline().decode('utf-8').split(delim)
                 # print(f"Received: {line}")
                 print(line)
-                serial_data = (int) (line[2])
+                serial_data.value = (int) (line[2])
                 # time.sleep(0.5)
     except serial.SerialException as e:
         print(f"Serial exception: {e}")
 
-def process_data():
-    global serial_data
+def process_data(serial_data):
+    # global serial_data
     rvr = SpheroRvrObserver()
     try:
         rvr.wake()
@@ -60,8 +61,9 @@ def process_data():
                 print("Unkown exception occurred while driving forward")
 
 def main():
-    first = multiprocessing.Process(target=read_serial, args=())
-    second = multiprocessing.Process(target=process_data, args=())
+    dist = Value("i", 0)
+    first = multiprocessing.Process(target=read_serial, args=(dist))
+    second = multiprocessing.Process(target=process_data, args=(dist))
     first.start()
     second.start()
     first.join()
