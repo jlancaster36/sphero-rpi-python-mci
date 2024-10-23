@@ -12,7 +12,6 @@ BAUD_RATE = 9600
 
 # Global variable to store received serial data
 serial_data = 0
-data_lock = threading.Lock()
 
 def read_serial():
     global serial_data
@@ -44,30 +43,44 @@ def process_data():
     rvr.drive_control.reset_heading()
     dist_threshold = 1000
     while True:
-        with data_lock:
-            pass
-            # print(serial_data)
-            # if serial_data > dist_threshold:
-            #     try:
-            #         print("Move Rover Forward")
-            #         rvr.drive_control.drive_forward_seconds(
-            #             speed=25,
-            #             heading=0,  # Valid heading values are 0-359
-            #             time_to_drive=1
-            #         )
-            #         print("done moving forward")
-            #     except:
-            #         print("Unkown exception occurred while driving forward")
+        pass
+        # print(serial_data)
+        # if serial_data > dist_threshold:
+        #     try:
+        #         print("Move Rover Forward")
+        #         rvr.drive_control.drive_forward_seconds(
+        #             speed=25,
+        #             heading=0,  # Valid heading values are 0-359
+        #             time_to_drive=1
+        #         )
+        #         print("done moving forward")
+        #     except:
+        #         print("Unkown exception occurred while driving forward")
 
 def main():
-    serial_thread = threading.Thread(target=read_serial)
-    processing_thread = threading.Thread(target=process_data)
+    # serial_thread = threading.Thread(target=read_serial)
+    # processing_thread = threading.Thread(target=process_data)
 
-    serial_thread.start()
-    processing_thread.start()
+    # serial_thread.start()
+    # processing_thread.start()
 
-    serial_thread.join()
-    processing_thread.join()
+    # serial_thread.join()
+    # processing_thread.join()
+    global serial_data
+    delim = " "
+    try:
+        with serial.Serial(SERIAL_PORT, BAUD_RATE) as ser:
+            while True:
+                ser.reset_input_buffer()
+                # while ser.in_waiting > 50:
+                #     _ = ser.readline()
+                line = ser.readline().decode('utf-8').split(delim)
+                # print(f"Received: {line}")
+                print(line)
+                serial_data = (int) (line[2])
+                # time.sleep(0.5)
+    except serial.SerialException as e:
+        print(f"Serial exception: {e}")
 
 if __name__ == "__main__":
     main()
