@@ -45,6 +45,7 @@ def process_data():
     dist_threshold = 1000
     while True:
         with data_lock:
+            pass
             # print(serial_data)
             # if serial_data > dist_threshold:
             #     try:
