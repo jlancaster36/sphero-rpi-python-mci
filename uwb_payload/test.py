@@ -46,6 +46,7 @@ def process_data():
     rvr.drive_control.reset_heading()
     dist_threshold = 1000
     while True:
+        # print(1)
         pass
         # print(serial_data)
         # if serial_data > dist_threshold:
@@ -62,10 +63,10 @@ def process_data():
 
 def main():
     serial_thread = threading.Thread(target=read_serial)
-    # processing_thread = threading.Thread(target=process_data)
+    processing_thread = threading.Thread(target=process_data)
 
     serial_thread.start()
-    # processing_thread.start()
+    processing_thread.start()
 
     # serial_thread.join()
     # processing_thread.join()
