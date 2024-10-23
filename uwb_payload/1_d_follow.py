@@ -67,7 +67,7 @@ class MyPlayer(threading.Thread):
                 print("Move Rover Forward")
                 try:
                     # rvr.drive_with_heading(
-                    #     speed=25,
+                    #     speed=25, 
                     #     heading=0
                     # )
                     # move forward

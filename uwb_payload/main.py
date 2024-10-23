@@ -10,9 +10,6 @@ rvr = SpheroRvrObserver()
 
 
 def main():
-    """ This program has RVR drive with how to drive RVR using the drive control helper.
-    """
-
     try:
         rvr.wake()
 
