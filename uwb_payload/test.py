@@ -19,9 +19,10 @@ def read_serial():
     delim = " "
     try:
         with serial.Serial(SERIAL_PORT, BAUD_RATE) as ser:
+            print(ser)
             while True:
-                # while ser.in_waiting() > 50:
-                #     _ = ser.readline()
+                while ser.in_waiting() > 50:
+                    _ = ser.readline()
                 line = ser.readline().decode('utf-8').split(delim)
                 # print(f"Received: {line}")
                 serial_data = (int) (line[2])
