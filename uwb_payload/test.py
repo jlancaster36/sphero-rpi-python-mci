@@ -22,7 +22,7 @@ def read_serial():
     try:
         with serial.Serial(SERIAL_PORT, BAUD_RATE) as ser:
             while True:
-                ser.reset_input_buffer()
+                # ser.reset_input_buffer()
                 # while ser.in_waiting > 50:
                 #     _ = ser.readline()
                 line = ser.readline().decode('utf-8').split(delim)
