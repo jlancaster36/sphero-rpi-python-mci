@@ -43,17 +43,17 @@ def process_data():
     while True:
         with data_lock:
             print(serial_data)
-            if serial_data > dist_threshold:
-                try:
-                    print("Move Rover Forward")
-                    rvr.drive_control.drive_forward_seconds(
-                        speed=25,
-                        heading=0,  # Valid heading values are 0-359
-                        time_to_drive=1
-                    )
-                    print("done moving forward")
-                except:
-                    print("Unkown exception occurred while driving forward")
+            # if serial_data > dist_threshold:
+            #     try:
+            #         print("Move Rover Forward")
+            #         rvr.drive_control.drive_forward_seconds(
+            #             speed=25,
+            #             heading=0,  # Valid heading values are 0-359
+            #             time_to_drive=1
+            #         )
+            #         print("done moving forward")
+            #     except:
+            #         print("Unkown exception occurred while driving forward")
         time.sleep(0.1)
 
 def main():
