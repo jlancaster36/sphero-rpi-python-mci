@@ -1,13 +1,16 @@
-from sphero_sdk import SpheroRvrAsync
-from sphero_sdk import SerialAsyncDal
-from sphero_sdk import RawMotorModesEnum
-import serial.tools.list_ports
 import asyncio
 import os
 import sys
-
+import time
 sys.path.append(os.path.abspath(
     os.path.join(os.path.dirname(__file__), '../')))
+
+from sphero_sdk import SpheroRvrAsync
+from sphero_sdk import SpheroRvrObserver
+from sphero_sdk import SerialAsyncDal
+from sphero_sdk import RawMotorModesEnum
+import serial.tools.list_ports
+
 
 serialInst = serial.Serial('/dev/ttyACM0', 19200, timeout=5)
 
@@ -19,29 +22,41 @@ rvr = SpheroRvrAsync(
     )
 )
 
+rvr_sync = SpheroRvrObserver()
+
 distance = 1000
 delimeter = ' '
 
 
 async def read_data():
     global distance
+    serialInst.flushInput()
     packet = serialInst.readline()
-    decoded_packet = packet.decode('utf')
+    decoded_packet = packet.decode('utf-8')
     data = decoded_packet.split(delimeter)
     print(data)
-    dist = (int)(data[2])
-    distance = dist
+    # print(1)
+    try:
+        dist = (int)(data[2])
+        distance = dist
+    finally:
+        # print('excepition while getting distance value')
+        return
+    
+    
 
 
 async def drive_rover():
-    if distance >= 1000:
-        await rvr.raw_motors(
-            left_mode=RawMotorModesEnum.forward.value,
-            left_duty_cycle=128,  # Valid duty cycle range is 0-255
-            right_mode=RawMotorModesEnum.forward.value,
-            right_duty_cycle=0  # Valid duty cycle range is 0-255
-        )
+    
+    global distance
+    # print(distance)
+    if distance >= 1250:
+        st = time.time()
+        await rvr.drive_control.drive_forward_seconds(speed=60, heading=0, time_to_drive=0.01)
+        # rvr_sync.drive_control.drive_forward_seconds(speed=50, heading=0, time_to_drive=0.1)
 
+        # print(time.time()-st)
+        # print("drive")        
 
 async def main():
     """ This program has RVR run its motors using the raw_motors command.

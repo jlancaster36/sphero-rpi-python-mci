@@ -56,7 +56,7 @@ class MyPlayer(threading.Thread):
                 print('\nProgram terminated with keyboard interrupt.')
 
         rvr.drive_control.reset_heading()
-        dist_threshold = 1000
+        dist_threshold = 800
         delimeter = ' '
         while True:
             decoded_packet = self.packet.decode('utf')
