@@ -49,10 +49,11 @@ threshold = 500
 while True: #TODO: Adjust to resemble main control loop
     if target_distance <= threshold:
         standby_mode()
+        continue
 
     reading = get_distance_senor_reading()
     if is_obstacle(reading):
-        current_heading = change_rvr_heading(rvr)
+        current_heading = change_rvr_heading(rvr, current_heading)
 
         # Drive some short distance in new heading
         # May be able to simplify this later

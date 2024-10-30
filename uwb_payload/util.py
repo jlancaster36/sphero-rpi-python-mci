@@ -7,6 +7,7 @@ from sphero_sdk import SpheroRvrObserver
 import asyncio
 from sphero_sdk import SpheroRvrAsync, SerialAsyncDal
 from enum import Enum
+import random
 
 def initialize():
     ports = serial.tools.list_ports.comports()
@@ -27,8 +28,14 @@ def get_distance_senor_reading(reading):
     return 0
 
 # TODO: Select new random heading for RVR
-def change_rvr_heading(rvr):
-    return 0
+def change_rvr_heading(rvr, current_heading = 0):
+    min_angle = 15
+    new_heading = current_heading
+
+    # This is probably stupid but works for now
+    while abs(new_heading - current_heading) < min_angle or abs(new_heading - current_heading) > (360 - min_angle):
+        new_heading = random.uniform(0, 360)
+    return new_heading
 
 # TODO: Implement get uwb distance when we have multithreading
 def get_uwb_distance(ports, serialInst):
