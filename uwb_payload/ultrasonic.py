@@ -18,8 +18,8 @@ rvr = SpheroRvrAsync(
 
 )
 GPIO.setmode(GPIO.BCM)
-right_trigger = 20
-right_echo = 21
+right_trigger = 0
+right_echo = 0
 left_trigger = 23
 left_echo = 24
 GPIO.setup(left_trigger, GPIO.OUT)
@@ -32,26 +32,27 @@ async def main():
     await rvr.reset_yaw()
     await asyncio.sleep(.5)
     while True:
-        dist_r =  distance_right()
+        # dist_r =  distance_right()
         dist_l =  distance_left()
-        await asyncio.sleep(.05)
-        print('Measurements are {0} cm right and {1} cm left'.format(dist_r, dist_l))
-        if dist_r < 35:
-            while dist_r < 35:
-                await rvr.raw_motors(2,255,1,255)
-                dist_r =  distance_right()
-                await asyncio.sleep(.05)
-                print('turning right')
-            await rvr.reset_yaw()
-        elif dist_l < 35:
-            while dist_l < 35:
-                await rvr.raw_motors(1,255,2,255)
-                dist_l =   distance_left()
-                await asyncio.sleep(.05)
-                print('turning left')
-            await rvr.reset_yaw()
-        elif dist_l >= 35 and dist_r >= 35:
-            await rvr.drive_with_heading(90,0,0)
+        print(dist_l)
+        # await asyncio.sleep(.05)
+        # print('Measurements are {0} cm right and {1} cm left'.format(dist_r, dist_l))
+        # if dist_r < 35:
+        #     while dist_r < 35:
+        #         await rvr.raw_motors(2,255,1,255)
+        #         dist_r =  distance_right()
+        #         await asyncio.sleep(.05)
+        #         print('turning right')
+        #     await rvr.reset_yaw()
+        # elif dist_l < 35:
+        #     while dist_l < 35:
+        #         await rvr.raw_motors(1,255,2,255)
+        #         dist_l =   distance_left()
+        #         await asyncio.sleep(.05)
+        #         print('turning left')
+        #     await rvr.reset_yaw()
+        # elif dist_l >= 35 and dist_r >= 35:
+        #     await rvr.drive_with_heading(90,0,0)
 
 try:
     loop.run_until_complete(
