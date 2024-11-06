@@ -38,6 +38,7 @@ async def main():
         dist_l =  distance_left()
         dist_front = distance_front()
         print(f"Left: {dist_l} | Right: {dist_r} | Front: {dist_front}")
+        time.sleep(0.2)
        
 try:
     loop.run_until_complete(
