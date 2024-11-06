@@ -1,6 +1,7 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+sys.path.append(os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '../')))
 import RPi.GPIO as GPIO
 import asyncio
 from sphero_sdk import SpheroRvrAsync
@@ -28,30 +29,8 @@ GPIO.setup(left_trigger, GPIO.OUT)
 GPIO.setup(left_echo, GPIO.IN)
 GPIO.setup(right_trigger, GPIO.OUT)
 GPIO.setup(right_echo, GPIO.IN)
-
-async def main():
-    await rvr.wake()
-    await rvr.reset_yaw()
-    await asyncio.sleep(.5)
-    while True:
-        dist_r =  distance_right()
-        dist_l =  distance_left()
-        dist_front = distance_front()
-        print(f"Left: {dist_l} | Right: {dist_r} | Front: {dist_front}")
-        time.sleep(0.2)
-       
-try:
-    loop.run_until_complete(
-        asyncio.gather(
-            main()
-        )
-    )
-
-except KeyboardInterrupt:
-
-    print('Program ended by KeyboardInterrupt')
-
-    GPIO.cleanup()
+GPIO.setup(front_trigger, GPIO.OUT)
+GPIO.setup(front_echo, GPIO.IN)
 
 def distance_left():
     GPIO.output(left_trigger, True)
@@ -108,3 +87,28 @@ def distance_front():
 
     distance = (time_elapsed * 34300) / 2
     return distance
+
+async def main():
+    await rvr.wake()
+    await rvr.reset_yaw()
+    await asyncio.sleep(.5)
+    while True:
+        dist_r =  distance_right()
+        dist_l =  distance_left()
+        dist_front = distance_front()
+        print(f"Left: {dist_l} | Right: {dist_r} | Front: {dist_front}")
+        time.sleep(0.2)
+       
+try:
+    loop.run_until_complete(
+        asyncio.gather(
+            main()
+        )
+    )
+
+except KeyboardInterrupt:
+
+    print('Program ended by KeyboardInterrupt')
+
+    GPIO.cleanup()
+
