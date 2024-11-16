@@ -119,6 +119,7 @@ async def main():
             case 1:
                 #have turned left to avoid obstacle, drive forward until right sensor shows past obstacle
                 print("avoiding obstacle left")
+                await asyncio.sleep(1)
                 if (dist_r > 60):
                     print("past obstacle, turning back towards goal")
                     #turn(90)
@@ -126,10 +127,12 @@ async def main():
                 else:
                     #await rvr.raw_motors(1,20,1,20)
                     l_heading = (heading + 270) % 360
-                    await rvr.drive_with_heading(20,l_heading,0)  
+                    await rvr.drive_with_heading(5,l_heading,0)  
+                    await asyncio.sleep(1)
             case 2:
                 #have turned right to avoid obstacle, drive forward until left sensor shows past obstacle
                 print("avoiding obstacle right")
+                await asyncio.sleep(1)
                 if (dist_l > 60):
                     print("past obstacle, turning back towards goal")
                     #turn(-90)
@@ -137,7 +140,8 @@ async def main():
                 else:
                     #await rvr.raw_motors(1,20,1,20)
                     r_heading = (heading + 90) % 360
-                    await rvr.drive_with_heading(20,r_heading,0)
+                    await rvr.drive_with_heading(0,r_heading,0)
+                    await asyncio.sleep(1)
             case _:
                 #shouldn't reach
                 print("error reached invalid state")
