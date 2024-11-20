@@ -31,6 +31,13 @@ distance_left = 0
 distance_right = 0
 turn_threshold = 100
 
+prev_ema_ser9 = 0
+curr_ema_ser9 = 0
+prev_ema_ser3 = 0
+curr_ema_ser3 = 0
+alpha = 0.3
+turn_threshold = 120
+
 
 async def read_data():
     global distance_left
@@ -44,12 +51,31 @@ async def read_data():
         if dataLeft != "occured\r\n":
             try:
                 distance_left = (int)(dataLeft.split(":")[-1])
+
+                if abs(distance_left) < 10000:
+                    if prev_ema_ser3 == 0:
+                        curr_ema_ser3 = distance_left
+                        prev_ema_ser3 = curr_ema_ser3
+                    else:
+                        curr_ema_ser3 = alpha * distance_left + \
+                            (1 - alpha) * prev_ema_ser3
+                        prev_ema_ser3 = curr_ema_ser3
+
             finally:
                 print('excepition while getting distance value')
                 return
         if dataRight != "occured\r\n":
             try:
                 distance_right = (int)(dataRight.split(":")[-1])
+
+                if abs(distance_right) < 10000:
+                    if prev_ema_ser9 == 0:
+                        curr_ema_ser9 = distance_right
+                        prev_ema_ser9 = curr_ema_ser9
+                    else:
+                        curr_ema_ser9 = alpha * distance_right + \
+                            (1 - alpha) * prev_ema_ser9
+                        prev_ema_ser9 = curr_ema_ser9
             finally:
                 print('excepition while getting distance value')
                 return
@@ -57,10 +83,18 @@ async def read_data():
 
 async def drive_rover():
 
-    print("Distance Left: ", distance_left)
-    print("Distance Right: ", distance_right)
+    print("Distance Left: ", curr_ema_ser3)
+    print("Distance Right: ", curr_ema_ser9)
 
-    diff = distance_left-distance_right
+    diff = (curr_ema_ser3-curr_ema_ser9)+70
+    # print("Diff: ", diff)
+
+    if abs(diff) < turn_threshold:
+        print("Drive Forward")
+    elif diff > turn_threshold:
+        print("Drive Left")
+    elif diff < -turn_threshold:
+        print("Drive Right")
     if abs(diff) < turn_threshold:
         await rvr.drive_control.drive_forward_seconds(speed=60, heading=0, time_to_drive=0.01)
     elif diff > turn_threshold:
