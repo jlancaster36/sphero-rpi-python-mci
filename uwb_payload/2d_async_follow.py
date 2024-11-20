@@ -29,6 +29,7 @@ rvr = SpheroRvrAsync(
 delimeter = ' '
 distance_left = 0
 distance_right = 0
+turn_threshold = 100
 
 
 async def read_data():
@@ -59,13 +60,13 @@ async def drive_rover():
     print("Distance Left: ", distance_left)
     print("Distance Right: ", distance_right)
 
-    if distance_left >= 1000:
-        # st = time.time()
+    diff = distance_left-distance_right
+    if abs(diff) < turn_threshold:
         await rvr.drive_control.drive_forward_seconds(speed=60, heading=0, time_to_drive=0.01)
-        # rvr_sync.drive_control.drive_forward_seconds(speed=50, heading=0, time_to_drive=0.1)
-
-        # print(time.time()-st)
-        # print("drive")
+    elif diff > turn_threshold:
+        await rvr.drive_control.drive_forward_seconds(speed=60, heading=330, time_to_drive=0.01)
+    elif diff < -turn_threshold:
+        await rvr.drive_control.drive_forward_seconds(speed=60, heading=30, time_to_drive=0.01)
 
 
 async def main():
@@ -85,7 +86,7 @@ async def main():
 
     while True:
         await read_data()
-        # await drive_rover()
+        await drive_rover()
 
     await rvr.close()
 
